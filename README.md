@@ -1,6 +1,9 @@
 # Email-Tracker
 **A simple email tracker, primarily made using nodeJS**
 
+**index.js:-** helps generate trackingID's, keeps track of trackingID's
+**main.py:-** helps communicate with index.js
+
 **How to configure**
 1) Get your mongoDB cluster url
 2) Add your mongoDB cluster url to a .env file
