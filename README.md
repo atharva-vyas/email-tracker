@@ -1,16 +1,16 @@
 # Email-Tracker
 **A simple email tracker, primarily made using nodeJS**
+****
+**index.js:-** helps generate trackingID's, keeps track of trackingID's, keeps track of how many times the mail was read
 
-**index.js:-** helps generate trackingID's, keeps track of trackingID's
+**main.py:-** helps communicate with index.js and fetch data
 
-**main.py:-** helps communicate with index.js
 
 **How to configure**
 1) Get your mongoDB cluster url
 2) Add your mongoDB cluster url to a .env file
 3) Deploy the index.js app using Heroku, AWS, etc.
 4) change the url variable in main.py with the url of your deployed application
-
 
 **How to Track your emails**
 1) create a mail tracking id, using main.py
