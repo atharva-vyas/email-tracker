@@ -2,6 +2,7 @@
 **A simple email tracker, primarily made using nodeJS**
 
 **index.js:-** helps generate trackingID's, keeps track of trackingID's
+
 **main.py:-** helps communicate with index.js
 
 **How to configure**
