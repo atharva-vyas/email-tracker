@@ -1,9 +1,9 @@
 # Email-Tracker
 **A simple email tracker, primarily made using nodeJS**
 ****
-**index.js:-** helps generate trackingID's, keeps track of trackingID's, keeps track of how many times the mail was read
+**index.js:-** helps generate trackingID's, keeps track of trackingID's, keeps track of how many times a email was read
 
-**main.py:-** helps communicate with index.js and fetch data
+**main.py:-** helps communicate with index.js and fetch data<br/><br/>
 
 
 **How to configure**
