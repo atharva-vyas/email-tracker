@@ -50,7 +50,7 @@ app.post('/', (req, res) => {
     });
     newNote.save();
 
-    res.json({ uuid: `/p?uuid=${uuid}` });
+    res.json({ uuid: `www.yourUrlHere.com/p?uuid=${uuid}` });
   }
   dt()
 })
