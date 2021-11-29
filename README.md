@@ -14,5 +14,4 @@
 
 **How to Track your emails**
 1) create a mail tracking id, using main.py
-2) embed the tracking id as a image with your email (dont worry the recipient will not be able to see it).
-3) wait for him to open your mail
+2) manually embed the tracking id as a image with your email
