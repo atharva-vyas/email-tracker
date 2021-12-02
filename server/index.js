@@ -9,8 +9,9 @@ const port = 3000
 
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+
+// ENTER YOUR MONGO CLUSTER URI HERE
 const uri = process.env.MONGO_URI
-// const fetch = require('node-fetch');
 
 // for mongo
 app.use(bodyParser.json());
@@ -24,7 +25,8 @@ const notesSchema = {
   title: String,
   dateTime: String,
   uuid: String,
-  counter: Number
+  counter: Number,
+  stats: String
 }
 
 //assigns schema to mongodb
@@ -35,42 +37,91 @@ Note.remove({}).exec()    //  removes all past data on reload
 app.use(express.static(__dirname))
 
 app.post('/', (req, res) => {
-  async function dt() {
-    const dtResponse = await fetch('http://worldtimeapi.org/api/timezone/Etc/UTC');
-    const dtData = await dtResponse.json();
+  async function main() {
+    var dtResponse = await fetch('http://worldtimeapi.org/api/timezone/Etc/UTC');
+    var dtData = await dtResponse.json();
 
-    let dateTime = dtData.datetime.split("T")[0] + " " + dtData.datetime.split("T")[1].split(".")[0] + ' UTC'
-
-    let uuid = uuidv4()
-    let newNote = new Note({
+    var dateTime = dtData.datetime.split("T")[0] + " " + dtData.datetime.split("T")[1].split(".")[0] + ' UTC'
+    var uuid = uuidv4()
+    var newNote = new Note({
       title: req.body.title,
       dateTime: dateTime,
       uuid: uuid,
-      counter: 0
+      counter: 0,
+      stats: 'Null'
     });
     newNote.save();
 
-    res.json({ uuid: `www.yourUrlHere.com/p?uuid=${uuid}` });
+    res.json({ uuid: `p?uuid=${uuid}` });
   }
-  dt()
+  main()
 })
 
-// http://localhost:3000/p?uuid=
+// http://yourURL.com/p?uuid=
 app.get('/p', function(req, res) {
-  let uuidParam = req.query.uuid
-  let uuidParamChecker = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(uuidParam)
-  if (uuidParamChecker === true) {
-    Note.find({uuid: uuidParam}, async function(err, notes) {
-      if (notes.length === 0) {
-        res.send("uuid not active");
-      } else {
-        Note.findOneAndUpdate({uuid: uuidParam}, {$inc : {'counter' : 1}}).exec();
-        res.sendFile(__dirname + '/img.png');
-      }
-    })
-  } else {
-    res.send("please enter a valid uuid");
+  async function main() {
+    var uuidParam = req.query.uuid
+    var uuidParamChecker = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(uuidParam)
+    
+    var dtResponse = await fetch('http://worldtimeapi.org/api/timezone/Etc/UTC');
+    var dtData = await dtResponse.json();
+    var dateTime = dtData.datetime.split("T")[0] + " " + dtData.datetime.split("T")[1].split(".")[0] + ' UTC'
+
+    var ip = await fetch(`http://ip-api.com/json/${req.headers['x-forwarded-for']}`);
+    var location = await ip.json()
+
+    var infoJson =  {
+      time: dateTime,
+      ip: location.query,
+      country: location.country,
+      regionName: location.regionName,
+      city: location.city,
+      zip: location.zip,
+      lat: location.lat.toString(),
+      lon: location.lon.toString(),
+      isp: location.isp,
+      org: location.org,
+      as: location.as
+    }
+
+    if (uuidParamChecker === true) {
+      Note.find({uuid: uuidParam}, async function(err, notes) {
+        if (notes.length === 0) {
+          res.send("uuid not active");
+        } else {
+
+          var doc = await Note.findOne({uuid: uuidParam});
+          // checks if the link is being clicked for the first time
+          if (doc.stats == 'Null'){
+            var main = await JSON.stringify(infoJson)
+            // console.log(main);
+            await Note.findOneAndUpdate({ uuid: uuidParam }, { stats: '[' + main.toString() + ']' });
+          } else {    // if not it appends a json with the latest click data
+            
+            var oldArrs = await doc.stats.toString()
+            var docStats = await doc.stats
+            var arr = []
+            var i = 0
+            while (i != JSON.parse(doc.stats).length) {
+              arr.push(JSON.parse(doc.stats)[i])
+              i++
+            }
+            arr.push(infoJson)
+            let final = JSON.stringify(arr)
+
+            await Note.findOneAndUpdate({ uuid: uuidParam }, { stats: final.toString() });
+          }
+
+          Note.findOneAndUpdate({uuid: uuidParam}, {$inc : {'counter' : 1}}).exec();
+          res.sendFile(__dirname + '/img.png');
+        }
+      })
+    } else {
+      res.send("please enter a valid uuid");
+    }
+
   }
+  main()
 });
 
 app.get('/data', function(req, res) {
@@ -78,8 +129,6 @@ app.get('/data', function(req, res) {
     res.send(notes)
   })
 });
-
-// app.use('/arr', express.static(__dirname))
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
