@@ -18,5 +18,5 @@
 4) change the url variable in main.py with the url of your deployed application
 
 **How to Track your emails**
-1) create a mail tracking id, using main.py
-2) manually embed the tracking id as a image with your email
+1) create a unique tracking url, using main.py
+2) manually embed the tracking url as an image with your email
