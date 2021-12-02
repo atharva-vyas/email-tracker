@@ -2,7 +2,7 @@
 **A simple email tracker, primarily made using nodeJS**
 ****
 **Features:-**
-1) Get the exact time the email was opened
+1) Get the exact time when the email is read
 2) Get GeoLocation of the Recipient
 3) Get additional Info such ISP, ASN, etc.
 ****
