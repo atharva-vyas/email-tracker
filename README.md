@@ -1,6 +1,11 @@
 # Email-Tracker
 **A simple email tracker, primarily made using nodeJS**
 ****
+**Features:-**
+1) Get the exact time the email was opened
+2) Get GeoLocation of the Recipient
+3) Get additional Info such ISP, ASN, etc.
+****
 **index.js:-** helps generate trackingID's, keeps track of trackingID's, keeps track of how many times a email is read
 
 **main.py:-** helps communicate with index.js and fetch data<br/><br/>
