@@ -20,3 +20,4 @@
 **How to Track your emails**
 1) create a unique tracking url, using main.py
 2) manually embed the tracking url as an image with your email
+3) send the mail and start tracking!
