@@ -10,7 +10,7 @@ from requests.models import Response
 # url = 'https://9a90-43-242-115-265.ngrok.io/'
 
 #DO NOT USE LOCALHOST IN PRODUCTION***
-url = 'https://localhost:3000/'     
+url = 'http://localhost:3000/'     
 
 def create():
     title = input('enter title: ')
